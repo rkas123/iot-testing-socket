@@ -11,7 +11,7 @@
     <div class="UI">
       <div class="boxes">
         <label class="switch">
-          <input type="checkbox" onclick="toggle()" />
+          <input id="switch" type="checkbox" onclick="toggle()" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -22,9 +22,10 @@
   </body>
   <script>
     var state;
-    // Create WebSocket connection.
-    const socket = new WebSocket("ws://localhost:3000");
+    var first = true;
 
+    const socket = new WebSocket("ws://localhost:3000");
+    // const socket = new WebSocket("ws://iot-test-temp.herokuapp.com");
     // Connection opened
     socket.addEventListener("open", function (event) {
       console.log("Connected to WS Server");
@@ -33,11 +34,6 @@
     // Listen for messages
     socket.addEventListener("message", function (event) {
       console.log("Message from server ");
-      state = JSON.parse(event.data);
-      console.log(state);
-
-      let W = state.weight;
-      document.getElementById("weight").innerText = `${W} kg`;
     });
 
     const sendMessage = () => {
@@ -45,8 +41,8 @@
     };
 
     function toggle() {
-      state.state = (state.state + 1) % 2;
-      console.log(state);
+      console.log("Clicked here");
+      console.log("Toggle");
       socket.send(JSON.stringify(state));
     }
   </script>

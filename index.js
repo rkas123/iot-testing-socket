@@ -5,48 +5,35 @@ const WebSocket = require("ws");
 
 const wss = new WebSocket.Server({ server: server, path: "/" });
 
-var box = {
-  state: 0,
-  weight: 9999.99,
-};
-
-// state : 0 means open 1 means closed
-// weight : the reading from sensor
-
+const port = process.env.PORT || 8000;
+//Codes
+//-1 from client saying to close
+//-2 from client saying to open
+//-3 from client saying to take photo
+//-4 from client saying to send weight
+//-5 from arduino saying door closed
+//-6 from arduino saying door opened
+//all positive floats -> from arduino sending weight
+let arduino_connected = false;
 wss.on("connection", function connection(ws) {
   console.log("A new client Connected!");
-  ws.send(JSON.stringify(box));
-  // ws.id = wss.getUniqueID();
+  console.log(wss.clients.size);
   ws.on("close", () => {
     console.log(`Disconnected`);
+    console.log(wss.clients.size);
   });
-  function update() {
-    new_weight = Math.floor(Math.random() * 11);
-    box.weight = new_weight;
-    ws.send(JSON.stringify(box));
-  }
 
-  setInterval(update, 5000);
   ws.on("message", function incoming(message) {
     console.log("received: %s", message);
-
-    var recstate = JSON.parse(message);
-
-    if (recstate.state !== box.state) {
-      console.log("Push data to ESP8266 Module");
-      box.state = recstate.state;
-    }
-    console.log(box);
-    ws.send(JSON.stringify(box));
-
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
+    console.log(message.toString());
+    Broadcast(message.toString());
   });
 });
 
-app.get("/", (req, res) => res.send("Hello World!"));
+const Broadcast = (data) => {
+  wss.clients.forEach((client) => {
+    client.send(data);
+  });
+};
 
-server.listen(3000, () => console.log(`Lisening on port :8080`));
+server.listen(PORT, () => console.log(`Lisening on port :${PORT}`));
