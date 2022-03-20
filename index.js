@@ -5,7 +5,7 @@ const WebSocket = require("ws");
 
 const wss = new WebSocket.Server({ server: server, path: "/" });
 
-const port = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8000;
 //Codes
 //-1 from client saying to close
 //-2 from client saying to open
