@@ -25,7 +25,7 @@ wss.on("connection", function connection(ws) {
     ws.send("-4");
   };
 
-  setInterval(forWeight, 10000);
+  //setInterval(forWeight, 10000);
   ws.on("close", () => {
     console.log(`Disconnected`);
     console.log(wss.clients.size);
