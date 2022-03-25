@@ -22,7 +22,7 @@ wss.on("connection", function connection(ws) {
   console.log("A new client Connected!");
   console.log(wss.clients.size);
   const forWeight = () => {
-    ws.send("4");
+    ws.send("-4");
   };
 
   setInterval(forWeight, 10000);
