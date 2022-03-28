@@ -62,11 +62,11 @@ wss.on("connection", function connection(ws) {
     ) {
       let newWeight = parseFloat(msg);
       newWeight = Math.abs(newWeight);
-      ws.send(msg);
+      //ws.send(msg);
       if (weight !== -9999) {
         if (weight - newWeight >= 10) {
           //ws.send("-8");
-          ws.send("-3");
+          Broadcast("-3");
         }
       }
       weight = newWeight;
