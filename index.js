@@ -70,7 +70,7 @@ wss.on("connection", function connection(ws) {
         }
       }
       weight = newWeight;
-      setTimeout(weightUpdate, 5000);
+      setTimeout(() => weightUpdate(weight), 5000);
     } else Broadcast(message.toString());
   });
 });
