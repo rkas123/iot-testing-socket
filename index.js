@@ -61,7 +61,7 @@ wss.on("connection", function connection(ws) {
       msg !== "-9"
     ) {
       let newWeight = parseFloat(msg);
-      newWeight = abs(newWeight);
+      newWeight = Math.abs(newWeight);
       ws.send(msg);
       if (weight !== -9999) {
         if (weight - newWeight >= 100) {
