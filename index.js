@@ -2,7 +2,19 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const WebSocket = require("ws");
+//const mongoose = require("mongoose");
+//const Item = require("./models/item.js");
+//app.use(express.json());
 
+// mongoose.connect(
+//   "mongodb+srv://rkas:ibkaJnq065BYgz8r@cluster0.zhbju.mongodb.net/dropBox?retryWrites=true&w=majority",
+//   {
+//     useNewUrlParser: true,
+//   }
+// );
+
+//password : ibkaJnq065BYgz8r
+//username : rkas
 const wss = new WebSocket.Server({ server: server, path: "/" });
 
 const PORT = process.env.PORT || 8000;
@@ -15,6 +27,7 @@ const PORT = process.env.PORT || 8000;
 //-6 from arduino saying door opened
 //-7
 //-8 from server to client for alert
+//-9 Image Captured from arduino to all
 //all positive floats -> from arduino sending weight
 let arduino_connected = false;
 let weight = -9999;
@@ -35,7 +48,7 @@ wss.on("connection", function connection(ws) {
     console.log("received: %s", message);
     console.log(message.toString());
     let msg = message.toString();
-
+    console.log(ws.id);
     if (
       msg !== "-1" &&
       msg !== "-2" &&
@@ -44,9 +57,11 @@ wss.on("connection", function connection(ws) {
       msg !== "-5" &&
       msg !== "-6" &&
       msg !== "-7" &&
-      msg !== "-8"
+      msg !== "-8" &&
+      msg !== "-9"
     ) {
       let newWeight = parseFloat(msg);
+      newWeight = abs(newWeight);
       ws.send(msg);
       if (weight !== -9999) {
         if (weight - newWeight >= 100) {
@@ -55,6 +70,7 @@ wss.on("connection", function connection(ws) {
         }
       }
       weight = newWeight;
+      Broadcast(weight);
     } else Broadcast(message.toString());
   });
 });
@@ -65,4 +81,28 @@ const Broadcast = (data) => {
   });
 };
 
+// app.get("/", async (req, res) => {
+//   let currentTime = new Date();
+//   let currentOffset = currentTime.getTimezoneOffset();
+//   let ISTOffset = 330;
+
+//   let currTime = new Date(
+//     currentTime.getTime() + (ISTOffset + currentOffset) * 60000
+//   );
+//   const item = new Item({
+//     name: "Hello",
+//     time: new Date(currTime),
+//   });
+
+//   try {
+//     await item.save();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
 server.listen(PORT, () => console.log(`Lisening on port :${PORT}`));
+
+// app.listen(3001, () => {
+//   console.log("running");
+// });
