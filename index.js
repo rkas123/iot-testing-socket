@@ -65,15 +65,19 @@ wss.on("connection", function connection(ws) {
       ws.send(msg);
       if (weight !== -9999) {
         if (weight - newWeight >= 10) {
-          ws.send("-8");
+          //ws.send("-8");
           ws.send("-3");
         }
       }
       weight = newWeight;
-      Broadcast(weight);
+      setTimeout(weightUpdate, 5000);
     } else Broadcast(message.toString());
   });
 });
+
+const weightUpdate = (data) => {
+  Broadcast(data);
+};
 
 const Broadcast = (data) => {
   wss.clients.forEach((client) => {
