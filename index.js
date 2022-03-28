@@ -64,7 +64,7 @@ wss.on("connection", function connection(ws) {
       newWeight = Math.abs(newWeight);
       ws.send(msg);
       if (weight !== -9999) {
-        if (weight - newWeight >= 100) {
+        if (weight - newWeight >= 10) {
           ws.send("-8");
           ws.send("-3");
         }
